@@ -33,20 +33,15 @@ function generateBuilding(centerX, centerY, height, size) {
     building.position.x = centerX;
     building.position.y = centerY;
     scene.add(building);
-    //console.log("Generating Building at (x=" + centerX, ",y=" + centerY + ") with size=" + size + " and height=" + height);
 }
 
 function generateCityBlock(centerX, centerY) {
-    // Minus 1 to offset coordinates to the center of building
-    // console.log("Generating City Block (x=" + centerX + ",y=" + centerY + ")");
     if (Math.random() < GROUND_FLOOR_PERCENTAGE) {
         generateBuilding(centerX, centerY, 2, BLOCK_SIZE * BUILDING_WIDTH_W_BUFFER)
     }
     for (x = -1; x <= 1; x++) {
         for (y = -1; y <= 1; y++) {
-            if (x == 0 && y == 0 && (Math.random() < EMPTY_CENTER_ODDS)) {
-                break;
-            } else {
+            if (!(x == 0 && y == 0 && (Math.random() < EMPTY_CENTER_ODDS))) {
                 generateBuilding((centerX + (x * BUILDING_WIDTH_W_BUFFER)), (centerY + (y * BUILDING_WIDTH_W_BUFFER)), generateBuildingHeight(3, 7), generateBuildingWidth());
             }
         }
