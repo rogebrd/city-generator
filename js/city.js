@@ -15,9 +15,21 @@ const BASE_BUILDING_WIDTH = 1;
 const BUILDING_SPACE_BUFFER = 1.2;
 const BUILDING_WIDTH_W_BUFFER = BASE_BUILDING_WIDTH * BUILDING_SPACE_BUFFER;
 const BUILDING_WIDTH_VARIATION = 0.1;
+const MIN_BUILDING_HEIGHT = 3;
+const MAX_BUILDING_HEIGHT = 7;
 
 // City Constants
 const ROAD_WIDTH = 0.5;
+
+const PARAMETER_DEFAULTS = {
+    gardenPercentage: GARDEN_PERCENTAGE,
+    roadWidth: ROAD_WIDTH,
+    buildingWidthVariation: BUILDING_WIDTH_VARIATION,
+    emptyCenterPercentage: EMPTY_CENTER_ODDS,
+    groundFloorPercentage: GROUND_FLOOR_PERCENTAGE,
+    minBuildingHeight: MIN_BUILDING_HEIGHT,
+    maxBuildingHeight: MAX_BUILDING_HEIGHT,
+}
 
 function generateGround() {
     const geometry = new THREE.PlaneGeometry(window.innerWidth, window.innerHeight);
@@ -35,14 +47,14 @@ function generateBuilding(centerX, centerY, height, size) {
     scene.add(building);
 }
 
-function generateCityBlock(centerX, centerY) {
-    if (Math.random() < GROUND_FLOOR_PERCENTAGE) {
+function generateCityBlock(centerX, centerY, parameters) {
+    if (Math.random() < parameters.groundFloorPercentage) {
         generateBuilding(centerX, centerY, 2, BLOCK_SIZE * BUILDING_WIDTH_W_BUFFER)
     }
     for (x = -1; x <= 1; x++) {
         for (y = -1; y <= 1; y++) {
-            if (!(x == 0 && y == 0 && (Math.random() < EMPTY_CENTER_ODDS))) {
-                generateBuilding((centerX + (x * BUILDING_WIDTH_W_BUFFER)), (centerY + (y * BUILDING_WIDTH_W_BUFFER)), generateBuildingHeight(3, 7), generateBuildingWidth());
+            if (!(x == 0 && y == 0 && (Math.random() < parameters.emptyCenterPercentage))) {
+                generateBuilding((centerX + (x * BUILDING_WIDTH_W_BUFFER)), (centerY + (y * BUILDING_WIDTH_W_BUFFER)), generateBuildingHeight(parameters.minBuildingHeight, parameters.maxBuildingHeight), generateBuildingWidth(parameters));
             }
         }
     }
@@ -58,27 +70,27 @@ function generateGarden(centerX, centerY) {
     scene.add(garden);
 }
 
-function generateCity() {
+function generateCity(parameters = PARAMETER_DEFAULTS) {
     generateGround();
     currentY = -10;
     for (row = 0; row <= 10; row++) {
         currentX = -20;
         for (col = 0; col <= 20; col++) {
-            if (Math.random() < GARDEN_PERCENTAGE) {
+            if (Math.random() < parameters.gardenPercentage) {
                 generateGarden(currentX, currentY);
             } else {
-                generateCityBlock(currentX, currentY);
+                generateCityBlock(currentX, currentY, parameters);
             }
             currentX += (BLOCK_SIZE * BUILDING_WIDTH_W_BUFFER);
-            currentX += ROAD_WIDTH;
+            currentX += parameters.roadWidth;
         }
         currentY += (BLOCK_SIZE * BUILDING_WIDTH_W_BUFFER);
-        currentY += ROAD_WIDTH;
+        currentY += parameters.roadWidth;
     }
 }
 
-function generateBuildingWidth() {
-    return (Math.random() * (2 * BUILDING_WIDTH_VARIATION)) + BASE_BUILDING_WIDTH - BUILDING_WIDTH_VARIATION;
+function generateBuildingWidth(parameters) {
+    return (Math.random() * (2 * parameters.buildingWidthVariation)) + BASE_BUILDING_WIDTH - parameters.buildingWidthVariation;
 }
 
 function generateBuildingHeight(min, max) {
@@ -111,6 +123,10 @@ function animate() {
     renderer.render(scene, camera);
 }
 
+function clearScene() {
+    scene.remove.apply(scene, scene.children);
+}
+
 setup();
-generateCity();
+generateCity(PARAMETER_DEFAULTS);
 animate();

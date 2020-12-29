@@ -12,15 +12,28 @@
         <h1 class="title">City Generator</h1>
         <div class="controller">
             <h2>Controls</h2>
-            <label for="gardenRange">Garden Percentage</label>
-            <input type="range" class="range" id="gardenRange" min=0 max=1 step=0.01
-                onchange="updateValues('gardenRange')"></input>
-            <input type="number" class="number" id="gardenNumber" onchange="updateValues('gardenNumber')"></input>
+            <label for="gardenNumber">Garden Percentage</label>
+            <input type="number" class="number" id="gardenNumber"></input>
             <br>
-            <label for="buildingBaseRange">Building Base Percentage</label>
-            <input type="range" class="range" id="buildingBaseRange" min=0 max=1 step=0.01></input>
-            <input type="number" class="number" id="buildingBaseNumber"></input>
+            <label for="roadWidthNumber">Road Width</label>
+            <input type="number" class="number" id="roadWidthNumber"></input>
             <br>
+            <label for="buildingWidthNumber">Building Width Variation</label>
+            <input type="number" class="number" id="buildingWidthNumber"></input>
+            <br>
+            <label for="emptyCenterNumber">Empty Center Percentage</label>
+            <input type="number" class="number" id="emptyCenterNumber"></input>
+            <br>
+            <label for="groundFloorNumber">Ground Floor Percentage</label>
+            <input type="number" class="number" id="groundFloorNumber"></input>
+            <br>
+            <label for="minBuildingNumber">Min Building Height</label>
+            <input type="number" class="number" id="minBuildingNumber"></input>
+            <br>
+            <label for="maxBuildingNumber">Max Building Height</label>
+            <input type="number" class="number" id="maxBuildingNumber"></input>
+            <br>
+            <button onclick="regenerateCity()">Regenerate City</button>
         </div>
     </div>
     <script src="js/three.js"></script>
